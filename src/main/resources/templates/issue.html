@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Issue List</title>
+    <script>
+        let issues = [];
+
+        async function fetchIssues() {
+            const response = await fetch('/api/issues/all');
+            issues = await response.json();
+            renderIssues();
+        }
+
+        function renderIssues() {
+            const issueList = document.getElementById('issueList');
+            issueList.innerHTML = ''; // 기존 이슈 리스트 초기화
+
+            issues.forEach(issue => {
+                const issueElement = document.createElement('div');
+                issueElement.innerHTML = `
+                    <strong>${issue.title}</strong>
+                    <button onclick="deleteIssue(${issue.id})">-</button>
+                    <button onclick="openEditPopup(${issue.id})">Edit</button>
+                `;
+                issueList.appendChild(issueElement);
+            });
+        }
+
+        async function addIssue() {
+            const taskId = document.getElementById('taskId').value;
+            const priority = document.getElementById('priority').value;
+            const title = document.getElementById('title').value;
+            const tag = document.getElementById('tag').value;
+            const progress = document.getElementById('progress').value;
+            const content = document.getElementById('content').value;
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+
+            const newIssue = {
+                taskId: taskId,
+                priority: priority,
+                title: title,
+                tag: tag,
+                progress: progress,
+                content: content,
+                startDate: startDate,
+                endDate: endDate
+            };
+
+            const response = await fetch('/api/issues', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newIssue),
+            });
+
+            if (response.ok) {
+                clearInputFields(); // 입력 필드 초기화
+                fetchIssues(); // 이슈 목록 갱신
+            }
+        }
+
+        async function deleteIssue(id) {
+            const response = await fetch(`/api/issues/${id}`, {
+                method: 'DELETE',
+            });
+
+            if (response.ok) {
+                fetchIssues(); // 이슈 목록 갱신
+            }
+        }
+
+        function openEditPopup(id) {
+            const issue = issues.find(issue => issue.id === id);
+            document.getElementById('editTaskId').value = issue.taskId;
+            document.getElementById('editPriority').value = issue.priority;
+            document.getElementById('editTitle').value = issue.title;
+            document.getElementById('editTag').value = issue.tag;
+            document.getElementById('editProgress').value = issue.progress;
+            document.getElementById('editContent').value = issue.content;
+            document.getElementById('editStartDate').value = issue.startDate.split('T')[0]; // 날짜 형식 맞추기
+            document.getElementById('editEndDate').value = issue.endDate.split('T')[0]; // 날짜 형식 맞추기
+            document.getElementById('editId').value = issue.id;
+            document.getElementById('editPopup').style.display = 'block';
+        }
+
+        async function saveEdit() {
+            const id = document.getElementById('editId').value;
+            const updatedIssue = {
+                taskId: document.getElementById('editTaskId').value,
+                priority: document.getElementById('editPriority').value,
+                title: document.getElementById('editTitle').value,
+                tag: document.getElementById('editTag').value,
+                progress: document.getElementById('editProgress').value,
+                content: document.getElementById('editContent').value,
+                startDate: document.getElementById('editStartDate').value,
+                endDate: document.getElementById('editEndDate').value
+            };
+
+            const response = await fetch(`/api/issues/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(updatedIssue),
+            });
+
+            if (response.ok) {
+                document.getElementById('editPopup').style.display = 'none';
+                fetchIssues(); // 이슈 목록 갱신
+            }
+        }
+
+        function closeEditPopup() {
+            document.getElementById('editPopup').style.display = 'none';
+        }
+
+        function clearInputFields() {
+            document.getElementById('taskId').value = '';
+            document.getElementById('priority').value = '';
+            document.getElementById('title').value = '';
+            document.getElementById('tag').value = '';
+            document.getElementById('progress').value = '';
+            document.getElementById('content').value = '';
+            document.getElementById('startDate').value = '';
+            document.getElementById('endDate').value = '';
+        }
+
+        window.onload = fetchIssues; // 페이지 로드 시 이슈 목록을 가져옴
+    </script>
+    <style>
+        #editPopup {
+            display: none;
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            border: 1px solid #ccc;
+            padding: 20px;
+            background-color: white;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+<h2>Issue List</h2>
+<input type="number" id="taskId" placeholder="Task ID" />
+<input type="number" id="priority" placeholder="Priority" />
+<input type="text" id="title" placeholder="Title" />
+<input type="text" id="tag" placeholder="Tag" />
+<input type="text" id="progress" placeholder="Progress" />
+<textarea id="content" placeholder="Content"></textarea>
+<input type="date" id="startDate" />
+<input type="date" id="endDate" />
+<button onclick="addIssue()">+</button>
+
+<div id="issueList"></div>
+
+<div id="editPopup">
+    <h3>Edit Issue</h3>
+    <input type="hidden" id="editId" />
+    <input type="number" id="editTaskId" placeholder="Task ID" />
+    <input type="number" id="editPriority" placeholder="Priority" />
+    <input type="text" id="editTitle" placeholder="Title" />
+    <input type="text" id="editTag" placeholder="Tag" />
+    <input type="text" id="editProgress" placeholder="Progress" />
+    <textarea id="editContent" placeholder="Content"></textarea>
+    <input type="date" id="editStartDate" />
+    <input type="date" id="editEndDate" />
+    <button onclick="saveEdit()">Save</button>
+    <button onclick="closeEditPopup()">Cancel</button>
+</div>
+</body>
+</html>

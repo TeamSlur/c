@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Room</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.0/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+</head>
+<body>
+<h2>Chat Room <span id="projectId"></span></h2>
+
+<div id="chat"></div>
+<input type="text" id="senderId" placeholder="Enter your ID"/>
+<input type="text" id="message" placeholder="Enter your message"/>
+<input type="text" id="parentMessageId" placeholder="Enter parent message ID (optional)"/>
+<button id="send">Send</button>
+
+<script>
+    let stompClient = null;
+    const projectId = window.location.pathname.split('/').pop(); // URL에서 projectId를 가져옴
+    document.getElementById('projectId').innerText = projectId; // 프로젝트 ID 표시
+
+    // WebSocket 연결 설정
+    function connect() {
+        const socket = new SockJS('/ws-chat');
+        stompClient = Stomp.over(socket);
+
+        stompClient.connect({}, function () {
+            console.log('Connected to WebSocket');
+            const topic = `/topic/chats-${projectId}`;
+            console.log(`Subscribing to topic: ${topic}`);
+
+            stompClient.subscribe(topic, function (message) {
+                console.log('Message received on topic:', topic);
+                console.log('Raw message body:', message.body);
+
+                let msg;
+                try {
+                    msg = JSON.parse(message.body);
+                    console.log('Parsed message:', msg);
+                } catch (error) {
+                    console.error('Error parsing message:', error);
+                    return;
+                }
+
+                appendMessage(msg.senderId, msg.message, msg.parentMessageId); // 화면에 메시지 추가
+            });
+        }, function (error) {
+            console.error('WebSocket connection error:', error);
+            setTimeout(connect, 5000); // 연결 실패 시 5초 후 재시도
+        });
+    }
+
+    // 메시지 전송
+    function sendMessage() {
+        const senderId = document.getElementById('senderId').value;
+        const message = document.getElementById('message').value;
+        const parentMessageId = document.getElementById('parentMessageId').value || null;
+
+        if (!senderId || !message) {
+            alert('Please enter both your ID and message!');
+            return;
+        }
+
+        const messageData = {
+            senderId: senderId,
+            message: message,
+            projectId: projectId,
+            parentMessageId: parentMessageId
+        };
+
+        if (stompClient && stompClient.connected) {
+            const destination = `/app/api/chats/send/${projectId}`;
+            console.log(`Sending message to: ${destination}`);
+            stompClient.send(destination, {}, JSON.stringify(messageData));
+            appendMessage(senderId, message, parentMessageId); // 전송 즉시 메시지 화면에 표시
+        } else {
+            alert('WebSocket is not connected. Please try again.');
+        }
+
+        document.getElementById('message').value = ''; // 입력란 초기화
+    }
+
+    // 채팅 화면에 메시지 추가
+    function appendMessage(senderId, message, parentMessageId) {
+        const messageElement = document.createElement('div');
+        messageElement.textContent = `${senderId}: ${message}${parentMessageId ? ` (Reply to: ${parentMessageId})` : ''}`;
+        document.getElementById('chat').appendChild(messageElement);
+    }
+
+    // 기존 채팅 내역 가져오기
+    async function fetchMessages() {
+        try {
+            const response = await fetch(`/api/chats?pid=${projectId}`);
+            const messages = await response.json();
+
+            const chatDiv = document.getElementById('chat');
+            chatDiv.innerHTML = ''; // 기존 메시지 초기화
+
+            messages.forEach(msg => {
+                appendMessage(msg.senderId, msg.message, msg.parentMessageId);
+            });
+        } catch (error) {
+            console.error('Error fetching messages:', error);
+        }
+    }
+
+    // 버튼 클릭 이벤트
+    document.getElementById('send').onclick = function() {
+        sendMessage();
+    };
+
+    // 페이지 로드 시 WebSocket 연결 및 채팅 내역 가져오기
+    window.onload = function() {
+        connect();
+        fetchMessages();
+    };
+</script>
+</body>
+</html>
