@@ -35,10 +35,11 @@ public class DocumentService {
 
     // document 수정
     @Transactional
-    public ResponseEntity<ResGetDocumentDto> updateDocument(ReqUpdateDocumentDto dto){
+    public ResponseEntity<ResGetDocumentDto> updateDocument(ReqUpdateDocumentDto dto) {
         DocumentEntity entity = repository.findById(dto.getDocumentId())
-                .orElseThrow(EntityNotFoundException::new);
-        entity.updateDocument(dto);
+                .orElseThrow(() -> new EntityNotFoundException("Document with ID " + dto.getDocumentId() + " not found"));
+
+        entity.updateDocument(dto); // entity에서 updateDocument 메서드 호출
 
         return ResponseEntity.ok(new ResGetDocumentDto(entity));
     }
