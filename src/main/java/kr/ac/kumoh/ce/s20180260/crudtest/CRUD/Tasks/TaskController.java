@@ -1,5 +1,6 @@
 package kr.ac.kumoh.ce.s20180260.crudtest.CRUD.Tasks;
 
+import kr.ac.kumoh.ce.s20180260.crudtest.CRUD.Issues.IssuesService;
 import kr.ac.kumoh.ce.s20180260.crudtest.CRUD.Tasks.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -11,29 +12,24 @@ import java.util.List;
 @RequestMapping("/api/task")
 public class TaskController {
     @Autowired
-    private TaskService service;
-
-    //모든 task 조회
-    @GetMapping("/all")
-    public ResponseEntity<List<ResGetTaskDto>> getAllTasks(
-    ) {
-        return service.getAllTasks();
-    }
+    private TaskService taskService;
+    @Autowired
+    private IssuesService issuesService;
 
     //project 의 task 모두 조회
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<ResGetTaskDto>> getAllTaskById(
             @RequestParam Long pid
     ){
-        return service.getAllTasksById(pid);
+        return taskService.getAllTasksByProjectId(pid);
     }
 
     //특정 task 조회
     @GetMapping("/details")
-    public ResponseEntity<ResTaskDto> getTaskById(
+    public ResponseEntity<ResTaskDto> getTaskDetailByTaskId(
             @RequestParam Long pid,
             @RequestParam Long tid) {
-        return service.getTaskById(tid);
+        return taskService.getTaskById(tid);
     }
 
     //task 추가
@@ -41,7 +37,7 @@ public class TaskController {
     public ResponseEntity<ResTaskDto> addTask(
             @RequestParam Long pid,
             @RequestBody ReqAddTaskDto reqAddTaskDto) {
-        return service.addTask(reqAddTaskDto);
+        return taskService.addTask(reqAddTaskDto);
     }
 
     //task 수정
@@ -50,7 +46,7 @@ public class TaskController {
             @RequestParam Long pid,
             @RequestParam Long tid,
             @RequestBody ReqUpdateTaskDto reqUpdateTaskDto) {
-        return service.updateTask(tid, reqUpdateTaskDto);
+        return taskService.updateTask(tid, reqUpdateTaskDto);
     }
 
     //task 삭제
@@ -58,6 +54,6 @@ public class TaskController {
     public ResponseEntity<Void> deleteTask(
             @RequestParam Long pid,
             @RequestParam Long tid) {
-         return service.deleteTask(tid);
+        return taskService.deleteTask(tid);
     }
 }

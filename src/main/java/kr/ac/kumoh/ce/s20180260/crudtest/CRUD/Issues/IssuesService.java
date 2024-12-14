@@ -28,8 +28,8 @@ public class IssuesService {
     }
 
     // issue id에 대한 정보를 요청하는 API ( 복수 )
-    public ResponseEntity<List<ResGetIssueDto>> getAllIssuesById(Long pid) {
-        List<ResGetIssueDto> issueList = issueRepository.findIssueEntitiesByProjectId(pid)
+    public ResponseEntity<List<ResGetIssueDto>> getAllIssuesByTaskId(Long tid) {
+        List<ResGetIssueDto> issueList = issueRepository.findIssueEntitiesByProjectId(tid)
                 .stream()
                 .map(ResGetIssueDto::new)
                 .toList();
@@ -37,7 +37,7 @@ public class IssuesService {
     }
 
     // issue 내용에 대한 정보를 요청하기 위한  API ( 단수 )
-    public ResponseEntity<ResAddIssueDto> getIssueById(Long isId) {
+    public ResponseEntity<ResAddIssueDto> getIssueDetailByIssueId(Long isId) {
         try {
             // Repository 에서 이슈의 id를 통해 조회
             // 해당 entity 존재하지 않을 시, 예외처리(EntityNotFoundException)

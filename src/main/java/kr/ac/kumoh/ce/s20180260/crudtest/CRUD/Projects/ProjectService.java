@@ -51,8 +51,8 @@ public class ProjectService {
         ProjectEntity projectEntity = repository.findById(pid).orElseThrow(
                 () -> new EntityExistsException("project not found"));
 
-        List<ResGetTaskDto> taskList = taskService.getAllTasksById(pid).getBody();
-        List<ResGetIssueDto> issueList = issuesService.getAllIssuesById(pid).getBody();
+        List<ResGetTaskDto> taskList = taskService.getAllTasksByProjectId(pid).getBody();
+        List<ResGetIssueDto> issueList = issuesService.getAllIssuesByTaskId(pid).getBody();
 
         resGetProjectDto.setProjectDto(new ResProjectDto(projectEntity));
         resGetProjectDto.setTaskList(taskList);

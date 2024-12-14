@@ -8,12 +8,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/develop")
+@RequestMapping("/api/project")
 public class ProjectController {
 
     @Autowired
     private ProjectService projectService;
 
+/*
     // 사용자의 프로젝트 목록 조회
     @GetMapping("/project/my")
     public ResponseEntity<List<ResProjectDto>> getMyProjects(
@@ -21,10 +22,10 @@ public class ProjectController {
     ) {
         return projectService.getMyProjects(uid);
     }
+*/
 
     // 프로젝트 정보 조회
-    // todo : 프로젝트 정보 조회 시, 불러올 데이터의 범위에 맞춰 개선
-    @GetMapping("/project")
+    @GetMapping
     public ResponseEntity<ResGetProjectDto> getProjectById(
             @RequestParam Long pid
     ) {
@@ -32,7 +33,7 @@ public class ProjectController {
     }
 
     // 프로젝트 생성
-    @PostMapping("/project/add")
+    @PostMapping("/add")
     public ResponseEntity<ResProjectDto> addProject(
             @RequestBody ReqCreateProjectDto request
     ) {
@@ -40,7 +41,7 @@ public class ProjectController {
     }
 
     //프로젝트 수정
-    @PutMapping("/project/edit")
+    @PutMapping("/edit")
     public ResponseEntity<ResProjectDto> updateProject(
             @RequestParam Long pid,
             @RequestBody ReqUpdateProjectDto request
@@ -49,7 +50,7 @@ public class ProjectController {
     }
 
     //프로젝트 삭제
-    @DeleteMapping("/project/delete")
+    @DeleteMapping("/delete")
     public ResponseEntity<Void> deleteProject(
             @RequestParam Long pid
     ) {

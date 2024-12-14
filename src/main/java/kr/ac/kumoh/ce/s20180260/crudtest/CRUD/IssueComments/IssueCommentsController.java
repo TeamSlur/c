@@ -16,15 +16,17 @@ public class IssueCommentsController {
     @Autowired
     private IssueCommentsService service;
 
+/*
     // 모든 이슈 코멘트 조회
     @GetMapping("/all")
     public ResponseEntity<List<ResGetIssueCommentsDto>> getAllIssuesComments(
     ){
         return service.getAllIssuesComments();
     }
+*/
 
     // 특정 이슈의 코멘트들 조회
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<ResGetIssueCommentsDto>> getAllIssuesCommentsById(
             @RequestParam Long isid
     ){

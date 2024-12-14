@@ -32,9 +32,10 @@ public class DocumentController {
     }
 
     // 특정 프로젝트에 대한 문서 목록 조회
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<ResGetDocumentDto>> getDocumentsByProjectId(
-            @RequestParam Long pid) {
+            @RequestParam Long pid
+    ){
         return service.getDocumentsByProjectId(pid);
     }
 

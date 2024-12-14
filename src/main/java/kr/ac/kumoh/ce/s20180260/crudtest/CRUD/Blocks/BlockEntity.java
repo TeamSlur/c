@@ -1,3 +1,4 @@
+/*
 package kr.ac.kumoh.ce.s20180260.crudtest.CRUD.Blocks;
 
 import jakarta.persistence.*;
@@ -23,3 +24,4 @@ public class BlockEntity {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }
+*/
