@@ -25,7 +25,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")
-                .setAllowedOrigins("http://localhost:3000")  // 허용할 Origin 설정
-                .withSockJS();  // SockJS 사용
+                .withSockJS();  // SockJS 사용, 별도 Origin 설정 없이 사용
     }
 }

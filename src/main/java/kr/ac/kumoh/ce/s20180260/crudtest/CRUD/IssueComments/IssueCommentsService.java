@@ -6,6 +6,7 @@ import kr.ac.kumoh.ce.s20180260.crudtest.CRUD.IssueComments.dto.ReqAddIssueComme
 import kr.ac.kumoh.ce.s20180260.crudtest.CRUD.IssueComments.dto.ReqUpdateIssueCommentsDto;
 import kr.ac.kumoh.ce.s20180260.crudtest.CRUD.IssueComments.dto.ResGetIssueCommentsDto;
 import kr.ac.kumoh.ce.s20180260.crudtest.CRUD.IssueComments.entity.IssueCommentsEntity;
+import kr.ac.kumoh.ce.s20180260.crudtest.login.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,8 @@ import java.util.List;
 public class IssueCommentsService {
     @Autowired
     private IssueCommentsRepository repository;
+    @Autowired
+    private JwtUtil jwtUtil;
 
     // 모든 Issue Comment 조회 (테스트용)
     public ResponseEntity<List<ResGetIssueCommentsDto>> getAllIssuesComments() {
@@ -46,7 +49,9 @@ public class IssueCommentsService {
     // 이슈 코멘트 생성
     // 예외처리 임시적용
     @Transactional
-    public ResponseEntity<ResGetIssueCommentsDto> postIssueComment(ReqAddIssueCommentsDto request) {
+    public ResponseEntity<ResGetIssueCommentsDto> postIssueComment(ReqAddIssueCommentsDto request, String token) {
+        // token 으로부터 userid 추출하여 dto 에 set
+        request.setUserId(jwtUtil.extractUserid(token));
         try {
             IssueCommentsEntity entity = repository.save(request.toEntity());
             return ResponseEntity.ok(new ResGetIssueCommentsDto(entity));

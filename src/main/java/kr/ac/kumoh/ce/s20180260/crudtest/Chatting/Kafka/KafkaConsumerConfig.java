@@ -23,7 +23,8 @@ public class KafkaConsumerConfig {
     public ConsumerFactory<Long, ReqAddChatsDto> consumerFactory() {
         Map<String, Object> configProps = new HashMap<>();
 
-        configProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        configProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "43.200.253.97:9092");
+//        configProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
         configProps.put(ConsumerConfig.GROUP_ID_CONFIG, "test-consumer-group");
         configProps.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest");
 

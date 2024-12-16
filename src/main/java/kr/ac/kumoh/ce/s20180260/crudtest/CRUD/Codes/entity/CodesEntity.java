@@ -40,7 +40,7 @@ public class CodesEntity {
     private String codeDescription;
 
     @Column(name = "createdBy")
-    private String createdBy;
+    private Long createdBy;
 
     @Column(name = "createDate")
     private LocalDateTime createDate;
@@ -67,5 +67,6 @@ public class CodesEntity {
         this.codeContent = dto.getCodeContent();
         this.codeImage = dto.getCodeImage();
         this.codeDescription = dto.getCodeDescription();
+        this.createdBy = dto.getCreateBy();
     }
 }

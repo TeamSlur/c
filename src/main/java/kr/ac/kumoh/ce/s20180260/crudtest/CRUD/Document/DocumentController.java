@@ -15,6 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/document")
 public class DocumentController {
+
     @Autowired
     private DocumentService service;
 
@@ -78,5 +79,12 @@ public class DocumentController {
         messagingTemplate.convertAndSend("/topic/document/" + pid, "deleted:" + did);
 
         return ResponseEntity.noContent().build();
+    }
+
+    // WebSocket을 통해 특정 문서에 대한 동기화 요청 처리
+    @MessageMapping("/syncDocument/{pid}")
+    public void syncDocumentForProject(@PathVariable Long pid, String content) {
+        // 특정 프로젝트의 문서 동기화 요청을 처리하고 해당 프로젝트에 관련된 구독자에게 전송
+        messagingTemplate.convertAndSend("/topic/document/" + pid, content);
     }
 }

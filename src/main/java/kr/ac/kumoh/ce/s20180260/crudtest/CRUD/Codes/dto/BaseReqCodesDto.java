@@ -17,7 +17,7 @@ public class BaseReqCodesDto {
     private String codeContent;
     private String codeImage;
     private String codeDescription;
-    private String createdBy;
+    private Long createdBy;
     // entity to dto
     public BaseReqCodesDto(CodesEntity entity) {
         this.codeIssueId = entity.getCodeIssueId();

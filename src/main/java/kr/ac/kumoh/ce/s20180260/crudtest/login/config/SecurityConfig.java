@@ -53,14 +53,15 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
+                                .requestMatchers("/api").authenticated()
                                 .requestMatchers("/login").permitAll()  // 로그인은 모두 허용
-                                .requestMatchers("/socket/**").permitAll() // WebSocket 경로에 대해 접근 허용
-                                .requestMatchers("/document").authenticated()  // 개발 관련 페이지는 인증 필요
+                                /*.requestMatchers("/document").authenticated()  // 개발 관련 페이지는 인증 필요
                                 .requestMatchers("/issue").authenticated()  // 개발 관련 페이지는 인증 필요
                                 .requestMatchers("/timeline").authenticated()  // 개발 관련 페이지는 인증 필요
                                 .requestMatchers("/codeissue").authenticated()  // 개발 관련 페이지는 인증 필요
                                 .requestMatchers("/codeissue/detail").authenticated()  // 개발 관련 페이지는 인증 필요
                                 .requestMatchers("/codeissue/add").authenticated()  // 개발 관련 페이지는 인증 필요
+                                */
                                 .anyRequest().permitAll()  // 그 외는 모두 허용
                 )
                 .sessionManagement(session ->
@@ -77,14 +78,14 @@ public class SecurityConfig {
 
     @Bean
     public CorsFilter corsFilter() {
-        // CorsFilter 설정은 HttpSecurity에서 CORS를 처리하기 위해 별도로 설정
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000")); // 허용할 도메인 설정
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
-        configuration.setAllowCredentials(true); // 쿠키와 인증 헤더 포함
-        source.registerCorsConfiguration("/**", configuration); // 모든 경로에 대해 CORS 설정
+        configuration.setAllowCredentials(true);
+        //configuration.addExposedHeader("Authorization");
+        source.registerCorsConfiguration("/**", configuration);
 
         return new CorsFilter(source);
     }

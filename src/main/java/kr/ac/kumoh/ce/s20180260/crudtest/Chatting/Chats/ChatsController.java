@@ -1,5 +1,6 @@
 package kr.ac.kumoh.ce.s20180260.crudtest.Chatting.Chats;
 
+import kr.ac.kumoh.ce.s20180260.crudtest.Chatting.Chats.dto.PageChatsDto;
 import kr.ac.kumoh.ce.s20180260.crudtest.Chatting.Chats.dto.ReqAddChatsDto;
 import kr.ac.kumoh.ce.s20180260.crudtest.Chatting.Chats.dto.ResGetChatsDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,14 +19,15 @@ public class ChatsController {
     @MessageMapping("api/chats/send/{pid}")
     public ResponseEntity<ReqAddChatsDto> sendChat(
             @DestinationVariable Long pid,
-            ReqAddChatsDto reqAddChatsDto
+            @RequestBody ReqAddChatsDto reqAddChatsDto,
+            @RequestHeader("Authorization") String token
     ) {
-        return service.sendMessage(pid, reqAddChatsDto);
+        return service.sendMessage(pid, reqAddChatsDto, token);
     }
 
     // 채팅방 내역 조회
     @GetMapping("/api/chats")
-    public ResponseEntity<List<ResGetChatsDto>> getChatsByProjectId(
+    public ResponseEntity<List<PageChatsDto>> getChatsByProjectId(
             @RequestParam Long pid
     ) {
         return service.getChatsByProjectId(pid);

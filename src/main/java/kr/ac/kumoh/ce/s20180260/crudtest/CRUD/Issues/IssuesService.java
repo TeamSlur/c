@@ -3,6 +3,8 @@ package kr.ac.kumoh.ce.s20180260.crudtest.CRUD.Issues;
 import jakarta.persistence.EntityNotFoundException;
 import kr.ac.kumoh.ce.s20180260.crudtest.CRUD.Issues.dto.*;
 import kr.ac.kumoh.ce.s20180260.crudtest.CRUD.Issues.entity.IssuesEntity;
+import kr.ac.kumoh.ce.s20180260.crudtest.CRUD.Role.IssueStatusEnum;
+import kr.ac.kumoh.ce.s20180260.crudtest.login.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,8 @@ public class IssuesService {
 
     @Autowired
     private IssuesRepository issueRepository;
+    @Autowired
+    private JwtUtil jwtUtil;
 
     // 모든 이슈를 조회하는 api (테스트용)
     public ResponseEntity<List<ResGetIssueDto>> getAllIssues() {
@@ -54,7 +58,16 @@ public class IssuesService {
 
     // issue 정보를 추가하기 위한 API
     @Transactional
-    public ResponseEntity<ResAddIssueDto> addIssue(ReqAddResIssueDto request) {
+    public ResponseEntity<ResAddIssueDto> addIssue(ReqAddResIssueDto request, String token) {
+/*
+        System.out.println("token :" + token);
+        System.out.println("username :" + jwtUtil.extractUsername(token));
+        System.out.println("userid :" + jwtUtil.extractUserid(token));
+*/
+        // 토큰으로부터 userid 추출 및 IssueStatusEnum SET
+        request.setCreateBy(jwtUtil.extractUserid(token));
+        request.setIssueStatus(IssueStatusEnum.TODO);
+
         try {
             IssuesEntity entity = issueRepository.save(request.toEntity());
             return ResponseEntity.ok(new ResAddIssueDto(entity));

@@ -13,25 +13,27 @@ public class IssuesController {
     @Autowired
     private IssuesService issuesService;
 
+/*
     // 모든 이슈를 조회하는 api (개발 단계에서만 사용)
     @GetMapping("/all")
     public ResponseEntity<List<ResGetIssueDto>> getAllIssues() {
         return issuesService.getAllIssues();
     }
+*/
 
     // issue id에 대한 정보를 요청하는 API ( 복수 )
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<ResGetIssueDto>> getAllIssuesById(
             @RequestParam Long pid){
         return issuesService.getAllIssuesById(pid);
-
     }
 
     // issue 내용에 대한 정보를 요청하기 위한  API ( 단수 )
     @GetMapping("/details")
     public ResponseEntity<ResAddIssueDto> getIssueById(
             @RequestParam Long pid,
-            @RequestParam Long isid) {
+            @RequestParam Long isid
+    ) {
         return issuesService.getIssueById(isid);
     }
 
@@ -39,8 +41,9 @@ public class IssuesController {
     @PostMapping("/add")
     public ResponseEntity<ResAddIssueDto> addIssue(
             @RequestParam Long pid,
-            @RequestBody ReqAddResIssueDto reqAddIssueDto) {
-        return issuesService.addIssue(reqAddIssueDto);
+            @RequestBody ReqAddResIssueDto reqAddIssueDto,
+            @RequestHeader("Authorization") String token) {
+        return issuesService.addIssue(reqAddIssueDto, token);
     }
 
 

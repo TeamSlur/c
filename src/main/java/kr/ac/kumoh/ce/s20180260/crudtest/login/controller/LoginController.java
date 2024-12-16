@@ -2,6 +2,7 @@ package kr.ac.kumoh.ce.s20180260.crudtest.login.controller;
 
 import kr.ac.kumoh.ce.s20180260.crudtest.CRUD.ProjectUsers.ProjectUsersService;
 import kr.ac.kumoh.ce.s20180260.crudtest.login.dto.LoginDTO;
+import kr.ac.kumoh.ce.s20180260.crudtest.login.dto.LoginResDTO;
 import kr.ac.kumoh.ce.s20180260.crudtest.login.service.UserService;
 import kr.ac.kumoh.ce.s20180260.crudtest.login.util.JwtUtil;
 import org.springframework.http.HttpStatus;
@@ -36,14 +37,15 @@ public class LoginController {
 
         if (isAuthenticated) {
             Long userId = userService.getUserIdByUsername(username);
-            String token = jwtUtil.generateToken(username);
+            String token = jwtUtil.generateToken(username, userId);
+//            String token = jwtUtil.generateToken(username);
 
             // 사용자의 프로젝트 ID 목록 조회
             List<Long> projectIds = projectUsersService.getProjectIdsForUser(userId);
 
             return ResponseEntity.ok()
                     .header("Authorization", "Bearer " + token)
-                    .body(projectIds); // 프로젝트 ID 목록 반환
+                    .body(new LoginResDTO(projectIds)); // 프로젝트 ID 목록 반환
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 실패");
         }

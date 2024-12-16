@@ -18,7 +18,7 @@ public class JWTService {
     @Value("${jwt.expiration}")
     private long expirationTime;
 
-    // JWT 토큰 생성
+/*    // JWT 토큰 생성
     public String generateToken(String username) {
         SecretKey key = Keys.hmacShaKeyFor(secretKey.getBytes());
         return Jwts.builder()
@@ -28,12 +28,20 @@ public class JWTService {
                 .signWith(key)
                 .compact();
     }
+*/
 
     // JWT 토큰에서 사용자명 추출
     public String extractUsername(String token) {
         SecretKey key = Keys.hmacShaKeyFor(secretKey.getBytes());
         Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
         return claims.getSubject();
+    }
+
+    // JWT 토큰에서 사용자 ID 추출
+    public Long extractUserid(String token) {
+        SecretKey key = Keys.hmacShaKeyFor(secretKey.getBytes());
+        Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+        return claims.get("userid", Long.class);
     }
 
     // JWT 토큰 유효성 검사
@@ -46,4 +54,5 @@ public class JWTService {
             return false;
         }
     }
+
 }

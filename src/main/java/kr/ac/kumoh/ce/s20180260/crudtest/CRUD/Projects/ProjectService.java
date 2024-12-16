@@ -25,13 +25,10 @@ import java.util.List;
 public class ProjectService {
     @Autowired
     private ProjectRepository repository;
-
     @Autowired
     private ProjectUsersService projectUsersService;
-
     @Autowired
     private TaskService taskService;
-
     @Autowired
     private IssuesService issuesService;
 

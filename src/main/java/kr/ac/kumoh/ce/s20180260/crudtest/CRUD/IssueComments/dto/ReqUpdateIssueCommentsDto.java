@@ -1,6 +1,5 @@
 package kr.ac.kumoh.ce.s20180260.crudtest.CRUD.IssueComments.dto;
 
-import kr.ac.kumoh.ce.s20180260.crudtest.CRUD.IssueComments.entity.IssueCommentsEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +9,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReqUpdateIssueCommentsDto{
+public class ReqUpdateIssueCommentsDto {
     private Long commentId;
+    private Long userId;
     private String content;
 }

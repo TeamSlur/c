@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.swing.text.html.parser.Entity;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class DocumentService {
@@ -19,18 +20,30 @@ public class DocumentService {
     private DocumentRepository repository;
 
     public ResponseEntity<List<ResGetDocumentDto>> getDocumentsByProjectId(Long pid) {
-        List<ResGetDocumentDto> documentList = repository.findDocumentEntitiesByProjectId(pid)
+        List<ResGetDocumentDto> documentList = repository.findByProjectId(pid)
                 .stream()
                 .map(ResGetDocumentDto::new)
                 .toList();
         return ResponseEntity.ok(documentList);
     }
 
-    // document 생성
-    @Transactional
-    public ResponseEntity<ResGetDocumentDto> postDocument(ReqAddDocumentDto request) {
-        DocumentEntity entity = repository.save(request.toEntity());
-        return ResponseEntity.ok(new ResGetDocumentDto(entity));
+    // 문서 추가
+    public ResponseEntity<ResGetDocumentDto> postDocument(ReqAddDocumentDto reqAddDocumentDto) {
+        // ReqAddDocumentDto를 DocumentEntity로 변환
+        DocumentEntity documentEntity = DocumentEntity.builder()
+                .projectId(reqAddDocumentDto.getProjectId())
+                .title(reqAddDocumentDto.getTitle())
+                .htmlContent(reqAddDocumentDto.getHtmlContent())
+                .createdBy(reqAddDocumentDto.getCreatedBy()) // 예: 요청자 정보
+                .order(reqAddDocumentDto.getOrder()) // 문서 순서
+                .build();
+
+        // DB에 저장
+        documentEntity = repository.save(documentEntity);
+
+        // 저장된 문서를 DTO로 변환하여 반환
+        ResGetDocumentDto resGetDocumentDto = new ResGetDocumentDto(documentEntity);
+        return ResponseEntity.ok(resGetDocumentDto);
     }
 
     // document 수정

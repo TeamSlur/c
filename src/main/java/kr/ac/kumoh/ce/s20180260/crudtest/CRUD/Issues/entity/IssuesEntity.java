@@ -5,7 +5,6 @@ import kr.ac.kumoh.ce.s20180260.crudtest.CRUD.Issues.dto.ReqUpdateIssueDto;
 import kr.ac.kumoh.ce.s20180260.crudtest.CRUD.Role.IssueStatusEnum;
 import lombok.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -33,6 +32,7 @@ public class IssuesEntity {
     private String issueCategory;
 
     @Column(name = "issue_status")
+    @Enumerated(EnumType.STRING)
     private IssueStatusEnum issueStatus;
 
     @Column(name = "issue_type")
@@ -50,7 +50,7 @@ public class IssuesEntity {
     @Column(name = "issue_related_end")
     private Long issueRelatedEnd;
 
-    @Column(name = "created_by", nullable = false)
+    @Column(name = "created_by")
     private Long createBy;
 
     @Column(name = "created_at", updatable = false)
@@ -61,7 +61,7 @@ public class IssuesEntity {
 
     @PrePersist
     private void prePersist(){
-        if (this.issueStatus == null) this.issueStatus = IssueStatusEnum.TODO;
+        if (this.issueStatus == null) this.issueStatus = IssueStatusEnum.IN_PROGRESS;
         if (this.createdAt == null) this.createdAt = LocalDateTime.now();
         if (this.updatedAt == null) this.updatedAt = LocalDateTime.now();
     }

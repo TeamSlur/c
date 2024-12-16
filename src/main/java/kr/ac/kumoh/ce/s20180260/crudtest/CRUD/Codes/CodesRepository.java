@@ -14,6 +14,7 @@ public interface CodesRepository extends JpaRepository<CodesEntity, Long> {
     @Query(
             value = "SELECT c.* FROM codes c " +
                     "JOIN issues i on i.issue_id = c.issues_id " +
+                    "JOIN tasks t on t.task_id = i.task_id"+
                     "JOIN projects p on i.project_id = p.project_id " +
                     "WHERE p.project_id = :pid",
             nativeQuery = true

@@ -41,6 +41,7 @@ public class TaskEntity {
     public void updateTask(ReqUpdateTaskDto dto){
         this.taskName = dto.getTaskName();
     }
+
     /*
     // dto to entity
     public TaskEntityBuilder toBuilder(){

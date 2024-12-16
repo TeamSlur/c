@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 @Controller
 public class PageController {
-    // 테스트용 이슈페이지 연결
+    /*// 테스트용 이슈페이지 연결
     @GetMapping("/issue")
     public String issues(){
         return "issue";
@@ -31,5 +31,5 @@ public class PageController {
     @GetMapping("/room/{roomId}")
     public String room(@PathVariable String roomId) {
         return "chatroom";
-    }
+    }*/
 }

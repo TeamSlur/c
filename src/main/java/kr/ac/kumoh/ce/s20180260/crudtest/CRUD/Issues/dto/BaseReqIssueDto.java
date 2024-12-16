@@ -4,8 +4,6 @@ import kr.ac.kumoh.ce.s20180260.crudtest.CRUD.Issues.entity.IssuesEntity;
 import kr.ac.kumoh.ce.s20180260.crudtest.CRUD.Role.IssueStatusEnum;
 import lombok.*;
 
-import java.time.LocalDateTime;
-
 @Getter
 @Setter
 @NoArgsConstructor

@@ -16,7 +16,7 @@ public class CodesController {
     private CodesService service;
 
     // project의 코드 조회
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<ResGetCodeDto>> getAllCodesByProjectId(
             @RequestParam Long pid
     ){
@@ -34,9 +34,10 @@ public class CodesController {
     @PostMapping("/add")
     public ResponseEntity<ResGetCodeDto> postCode(
             @RequestParam Long pid,
-            @RequestBody ReqAddCodeDto reqAddCodeDto
+            @RequestBody ReqAddCodeDto reqAddCodeDto,
+            @RequestHeader("Authorization") String token
     ){
-        return service.postCode(reqAddCodeDto);
+        return service.postCode(reqAddCodeDto,token);
     }
 
     @PutMapping("/edit")
@@ -44,6 +45,7 @@ public class CodesController {
             @RequestParam Long pid,
             @RequestParam Long cid,
             @RequestBody ReqUpdateCodeDto reqUpdateCodeDto
+            //@RequestHeader("Authorization") String token
     ){
         return service.editCode(reqUpdateCodeDto);
     }

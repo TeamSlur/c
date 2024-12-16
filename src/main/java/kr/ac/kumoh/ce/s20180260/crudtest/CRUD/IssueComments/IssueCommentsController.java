@@ -43,16 +43,17 @@ public class IssueCommentsController {
     // 이슈 코멘트 생성
     @PostMapping("/add")
     public ResponseEntity<ResGetIssueCommentsDto> postIssueComment(
-            @RequestParam Long isid,
-            @RequestBody ReqAddIssueCommentsDto reqIssueCommentDto
+            @RequestParam Long cid,
+            @RequestBody ReqAddIssueCommentsDto reqIssueCommentDto,
+            @RequestHeader("Authorization") String token
     ){
-        return service.postIssueComment(reqIssueCommentDto);
+        return service.postIssueComment(reqIssueCommentDto, token);
     }
 
     // 이슈 코멘트 수정
     @PutMapping("/edit")
     public ResponseEntity<ResGetIssueCommentsDto> updateIssueComment(
-            @RequestParam Long isid,
+            @RequestParam Long cid,
             @RequestParam Long icid,
             @RequestBody ReqUpdateIssueCommentsDto reqUpdateIssueCommentDto
     ){
@@ -62,7 +63,7 @@ public class IssueCommentsController {
     // 이슈 코멘트 삭제
     @DeleteMapping("/delete")
     public ResponseEntity<Void> deleteIssueComment(
-            @RequestParam Long isid,
+            @RequestParam Long cid,
             @RequestParam Long icid
     ){
         return service.deleteIssueComment(icid);

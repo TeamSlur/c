@@ -1,5 +1,6 @@
 package kr.ac.kumoh.ce.s20180260.crudtest.login.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import kr.ac.kumoh.ce.s20180260.crudtest.login.domain.User;
 import kr.ac.kumoh.ce.s20180260.crudtest.login.dto.SignUpDTO;
 import kr.ac.kumoh.ce.s20180260.crudtest.login.repository.UserRepository;
@@ -89,5 +90,10 @@ public class UserService {
         } else {
             throw new Exception("이메일에 해당하는 사용자가 없습니다.");
         }
+    }
+
+    public String getUserNameByUserId(Long senderId) {
+        User entity = userRepository.findById(senderId).orElseThrow(EntityNotFoundException::new);
+        return entity.getUsername();
     }
 }

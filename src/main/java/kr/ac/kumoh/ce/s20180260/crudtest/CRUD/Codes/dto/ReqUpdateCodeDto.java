@@ -19,4 +19,5 @@ public class ReqUpdateCodeDto{
     private String codeContent;
     private String codeImage;
     private String codeDescription;
+    private Long createBy;
 }

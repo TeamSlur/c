@@ -24,7 +24,7 @@ public class BaseResCodesDto {
     private String codeContent;
     private String codeImage;
     private String codeDescription;
-    private String createdBy;
+    private Long createdBy;
     private LocalDateTime createDate;
     private LocalDateTime updateDate;
 
